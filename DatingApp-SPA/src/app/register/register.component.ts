@@ -7,7 +7,6 @@ import { AuthService } from '../_services/auth.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  // @Input() valuesFromHome: any;  możliwość przekazywania do komponentów potomnych
   @Output() cancelRegister = new EventEmitter();  // komunikacja z komponentami "rodzicami"
   model: any = {};
 
