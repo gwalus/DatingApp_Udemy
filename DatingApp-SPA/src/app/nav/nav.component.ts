@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -11,7 +12,7 @@ export class NavComponent implements OnInit {
 
   model: any = {};  // tutaj będziemy zapisywać naszego użytkownika i hasło
 
-  constructor(public authService: AuthService, private alertify: AlertifyService) { }
+  constructor(public authService: AuthService, private alertify: AlertifyService, private router: Router) { }
   // wstrzyknięcie serwisu autoryzującego, serwisu powiadomień
 
   ngOnInit() {
@@ -22,6 +23,8 @@ export class NavComponent implements OnInit {
       this.alertify.success('Logged is successfully'); // zastąpienie powiadomieniem zamiast wyrzuceniem na konsole
     }, error => {
       this.alertify.error(error); // zastąpienie powiadomieniem zamiast wyrzuceniem na konsole
+    }, () => {
+      this.router.navigate(['/members']);
     });
   } // logowanie
 
@@ -36,5 +39,6 @@ export class NavComponent implements OnInit {
   logout() {
     localStorage.removeItem('token');
     this.alertify.message('Logged out'); // zastąpienie powiadomieniem zamiast wyrzuceniem na konsole
+    this.router.navigate(['/home']);
   }
 }
