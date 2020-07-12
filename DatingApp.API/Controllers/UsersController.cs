@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Data;
@@ -39,6 +41,22 @@ namespace DatingApp.API.Controllers
             var userToReturn = _mapper.Map<UserForDetailedDto>(user); // mapowanie klasy na klase do zwracania dla użytkownika, bez haseł ipt.
 
             return Ok(userToReturn);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
+        {
+            if(id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized(); // sprawdzamy czy użytkownik jest bieżącym użytkownikiem 
+
+            var userFromRepo = await _repo.GetUser(id);
+
+            _mapper.Map(userForUpdateDto, userFromRepo);    // mapowanie z klasy dto na konkretną do aktualizaji
+
+            if(await _repo.SaveAll())
+                return NoContent();
+
+            throw new Exception($"Updating user {id} failed on save");
         }
     }
 }
