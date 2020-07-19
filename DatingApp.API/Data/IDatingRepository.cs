@@ -10,6 +10,9 @@ namespace DatingApp.API.Data
          void Delete<T>(T entity) where T: class;
          Task<bool> SaveAll(); // zadanie będzie zwracać czy udało się zapisać czy też nie
          Task<IEnumerable<User>> GetUsers();    // zadanie będzie zwracało kolekcję użytkowników
-         Task<User> GetUser(int id);
+         Task<User> GetUser(int id); // pobranie użytkownika
+         Task<Photo> GetPhoto(int id); // pobranie zdjęcia
+
+         Task<Photo> GetMainPhotoForUser(int userId);
     }
 }
