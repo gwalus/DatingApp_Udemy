@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
+using DatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.API.Controllers
 {
+    [ServiceFilter(typeof(LogUserActivity))]
+    // za każdym razem gdy, któraś z metod zostanie wywowałana, będzie korzystała z filtrów akcji co zaktualizuje ostatnią aktywność użytkwnika
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
