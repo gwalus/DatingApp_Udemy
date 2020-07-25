@@ -16,5 +16,7 @@ namespace DatingApp.API.Data
          Task<Photo> GetPhoto(int id); // pobranie zdjęcia
 
          Task<Photo> GetMainPhotoForUser(int userId);
+
+         Task<Like> GetLike(int userId, int recipientId); // sprawdzenie czy użytkownik już nie lubi czasem innego użytkownika
     }
 }
