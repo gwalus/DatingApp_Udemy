@@ -25,11 +25,30 @@ namespace DatingApp.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(x => 
+            {
+                x.UseLazyLoadingProxies();
+                x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));   
+            });
+
+            ConfigureServices(services);
+        } // konfiguracja dla środowiska programistycznego
+
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(x =>  
+                {
+                    x.UseLazyLoadingProxies();
+                    x.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
+                });
+
+            ConfigureServices(services);
+        } // konfiguracja dla środowiska produkcyjnego
+        
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-            // wstrzykiwanie bazy danych
             services.AddControllers().AddNewtonsoftJson(opt => 
             {
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -85,9 +104,14 @@ namespace DatingApp.API
             app.UseAuthentication();    // dodanie do konfiguracji
             app.UseAuthorization();
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();   // automatycznie znajdzie plik index.html w folderze wwwroot, przez co można uruchowamić
+            // aplikację SPA na porcie 5000
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Fallback"); // po odświeżeniu strony aplikacja dalej działa, wie teraz gdzie ma przekierować
             });
         }
     }
